@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Siddharth Tiwari — Business Analyst & Product Strategist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Syne:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #050508;
+  --white: #f5f3ef;
+  --gold: #d4a853;
+  --gold2: #f0c97a;
+  --teal: #4ecdc4;
+  --muted: #6b6b7a;
+  --border: rgba(255,255,255,0.06);
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Syne', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --section-pad: 120px 5vw;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cur { position:fixed; width:8px; height:8px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .2s,height .2s,background .2s; mix-blend-mode:difference; }
+#cur-ring { position:fixed; width:40px; height:40px; border:1px solid rgba(212,168,83,.5); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s,height .3s,border-color .3s; }
+body.hovering #cur { width:14px; height:14px; }
+body.hovering #cur-ring { width:60px; height:60px; border-color:var(--gold); }
+
+/* ── CANVAS PARTICLES ── */
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.5rem 5vw;
+  transition:background .4s, backdrop-filter .4s;
+}
+nav.scrolled { background:rgba(5,5,8,.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+.nav-brand { font-family:var(--mono); font-size:12px; color:var(--gold); letter-spacing:.1em; text-decoration:none; }
+.nav-links { display:flex; gap:2.5rem; list-style:none; }
+.nav-links a { font-size:12px; font-family:var(--mono); color:var(--muted); text-decoration:none; letter-spacing:.06em; transition:color .2s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .3s; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a:hover::after { width:100%; }
+.nav-links a.active { color:var(--gold); }
+.nav-links a.active::after { width:100%; }
+
+/* ── PROGRESS BAR ── */
+#progress { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--teal)); z-index:600; width:0%; transition:width .1s; }
+
+/* ── HERO ── */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; position:relative; padding:0 5vw;
+  overflow:hidden;
+}
+.hero-bg-text {
+  position:absolute; font-family:var(--serif); font-size:clamp(8rem,20vw,22rem);
+  color:rgba(212,168,83,.03); font-weight:700; letter-spacing:-.02em; line-height:1;
+  user-select:none; pointer-events:none; top:50%; transform:translateY(-50%);
+  white-space:nowrap;
+}
+.hero-eyebrow {
+  font-family:var(--mono); font-size:11px; color:var(--gold); letter-spacing:.18em;
+  text-transform:uppercase; margin-bottom:2rem;
+  opacity:0; transform:translateY(20px); animation:up .7s ease .2s forwards;
+}
+.hero-name {
+  font-family:var(--serif); font-size:clamp(3.5rem,8vw,8rem);
+  line-height:1; font-weight:400; margin-bottom:.4rem;
+  opacity:0; transform:translateY(30px); animation:up .8s ease .35s forwards;
+}
+.hero-name .italic { font-style:italic; color:var(--gold); }
+.hero-subtitle {
+  font-family:var(--mono); font-size:clamp(11px,1.5vw,14px); color:var(--muted);
+  letter-spacing:.12em; text-transform:uppercase; margin-bottom:2.5rem;
+  opacity:0; transform:translateY(20px); animation:up .7s ease .5s forwards;
+}
+.hero-desc {
+  max-width:560px; font-size:16px; color:rgba(245,243,239,.55); line-height:1.85;
+  margin:0 auto 3rem;
+  opacity:0; transform:translateY(20px); animation:up .7s ease .65s forwards;
+}
+.hero-btns { display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; opacity:0; animation:up .7s ease .8s forwards; }
+.btn-gold { padding:.85rem 2.2rem; background:var(--gold); color:#050508; font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-decoration:none; font-weight:500; border:none; cursor:none; transition:transform .2s,box-shadow .2s; }
+.btn-gold:hover { transform:translateY(-3px); box-shadow:0 16px 40px rgba(212,168,83,.35); }
+.btn-outline { padding:.85rem 2.2rem; border:1px solid rgba(245,243,239,.2); color:var(--muted); font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-decoration:none; transition:border-color .2s,color .2s; cursor:none; }
+.btn-outline:hover { border-color:var(--white); color:var(--white); }
+
+.hero-stats {
+  position:absolute; bottom:3rem; left:0; right:0;
+  display:flex; justify-content:center; gap:5rem;
+  opacity:0; animation:up .7s ease 1s forwards;
+}
+.h-stat-num { font-family:var(--serif); font-size:2.2rem; color:var(--white); display:block; }
+.h-stat-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.1em; }
+.hero-scroll { position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; }
+.hero-scroll-line { width:1px; height:50px; background:linear-gradient(to bottom,var(--gold),transparent); animation:pulse-line 2s ease-in-out infinite; }
+@keyframes pulse-line { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+/* ── MARQUEE ── */
+.marquee-section { padding:1.5rem 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden; background:rgba(212,168,83,.03); position:relative; z-index:1; }
+.marquee-track { display:flex; white-space:nowrap; animation:marquee 30s linear infinite; }
+.marquee-item { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:.1em; padding:0 3rem; flex-shrink:0; }
+.marquee-item .dot { color:var(--gold); margin-right:1rem; }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ── SECTIONS ── */
+section { padding:var(--section-pad); position:relative; z-index:1; }
+.s-eye { font-family:var(--mono); font-size:11px; color:var(--gold); letter-spacing:.15em; text-transform:uppercase; margin-bottom:1rem; display:flex; align-items:center; gap:14px; }
+.s-eye::before { content:''; display:block; width:30px; height:1px; background:var(--gold); opacity:.6; }
+.s-head { font-family:var(--serif); font-size:clamp(2.2rem,4.5vw,4rem); line-height:1.1; margin-bottom:3.5rem; }
+.s-head em { font-style:italic; color:var(--gold); }
+
+/* ── ABOUT ── */
+.about-layout { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; }
+.about-body p { font-size:15px; color:rgba(245,243,239,.6); line-height:1.9; margin-bottom:1.2rem; }
+.about-body p strong { color:var(--white); font-weight:500; }
+.info-stack { display:flex; flex-direction:column; gap:1px; }
+.info-row { display:flex; justify-content:space-between; align-items:center; padding:1.1rem 1.4rem; background:rgba(255,255,255,.025); border:1px solid var(--border); transition:background .2s,border-color .2s; }
+.info-row:hover { background:rgba(212,168,83,.06); border-color:rgba(212,168,83,.25); }
+.info-key { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.1em; }
+.info-val { font-size:13px; color:var(--white); text-align:right; max-width:60%; }
+
+/* ── EXPERIENCE SCROLL ── */
+.exp-sticky-wrap { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+.exp-sticky-left { position:sticky; top:120px; }
+.exp-items { display:flex; flex-direction:column; gap:1px; }
+.exp-card {
+  background:rgba(255,255,255,.02); border:1px solid var(--border);
+  padding:2rem; cursor:none;
+  transition:background .3s, border-color .3s, transform .3s;
+  opacity:0; transform:translateX(40px);
+}
+.exp-card.visible { opacity:1; transform:none; transition:opacity .6s ease, transform .6s ease, background .3s, border-color .3s; }
+.exp-card:hover { background:rgba(212,168,83,.04); border-color:rgba(212,168,83,.3); transform:translateX(-4px); }
+.exp-card-period { font-family:var(--mono); font-size:10px; color:var(--gold); letter-spacing:.1em; margin-bottom:.6rem; }
+.exp-card-role { font-size:17px; font-weight:500; color:var(--white); margin-bottom:.3rem; }
+.exp-card-company { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:1.2rem; }
+.exp-card-points { list-style:none; display:flex; flex-direction:column; gap:.7rem; }
+.exp-card-points li { font-size:13px; color:rgba(245,243,239,.55); line-height:1.7; padding-left:1.2rem; position:relative; }
+.exp-card-points li::before { content:'›'; position:absolute; left:0; color:var(--gold); }
+
+/* ── IMPACT NUMBERS ── */
+.impact-section { background:rgba(212,168,83,.03); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:5rem 5vw; }
+.impact-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; }
+.impact-item { text-align:center; padding:3rem 1rem; border-right:1px solid var(--border); position:relative; overflow:hidden; }
+.impact-item:last-child { border-right:none; }
+.impact-item::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(212,168,83,.05),transparent); opacity:0; transition:opacity .3s; }
+.impact-item:hover::before { opacity:1; }
+.impact-num { font-family:var(--serif); font-size:clamp(2.5rem,5vw,4.5rem); color:var(--white); line-height:1; display:block; margin-bottom:.5rem; }
+.impact-num .accent { color:var(--gold); }
+.impact-label { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:.08em; line-height:1.5; }
+
+/* ── SKILLS 3D CARDS ── */
+.skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.skill-3d-wrap { perspective:800px; }
+.skill-3d-card {
+  background:rgba(255,255,255,.025); border:1px solid var(--border);
+  padding:2rem; position:relative; overflow:hidden;
+  transform-style:preserve-3d; transition:transform .15s ease, border-color .3s, box-shadow .3s;
+  cursor:none;
+}
+.skill-3d-card::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(212,168,83,.12), transparent 60%);
+  opacity:0; transition:opacity .3s;
+}
+.skill-3d-card:hover::before { opacity:1; }
+.skill-3d-card:hover { border-color:rgba(212,168,83,.4); box-shadow:0 20px 60px rgba(212,168,83,.1); }
+.sk-icon { font-size:1.6rem; margin-bottom:1.2rem; }
+.sk-name { font-size:15px; font-weight:500; margin-bottom:1rem; color:var(--white); }
+.sk-bar-wrap { display:flex; flex-direction:column; gap:8px; }
+.sk-bar-row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.sk-bar-label { font-family:var(--mono); font-size:10px; color:var(--muted); white-space:nowrap; flex-shrink:0; }
+.sk-bar-track { flex:1; height:2px; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden; }
+.sk-bar-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--teal)); border-radius:2px; width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+.sk-bar-pct { font-family:var(--mono); font-size:10px; color:var(--gold); min-width:28px; text-align:right; }
+
+/* ── AWARDS ── */
+.awards-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
+.award-card {
+  background:rgba(255,255,255,.02); border:1px solid var(--border);
+  padding:2.5rem; position:relative; overflow:hidden; cursor:none;
+  transition:transform .3s, border-color .3s;
+}
+.award-card::after { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:linear-gradient(to bottom,var(--gold),var(--teal)); transition:height .4s ease; }
+.award-card:hover::after { height:100%; }
+.award-card:hover { transform:translateY(-4px); border-color:rgba(212,168,83,.3); }
+.award-year { font-family:var(--mono); font-size:10px; color:var(--gold); letter-spacing:.12em; margin-bottom:.8rem; }
+.award-org { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:.4rem; }
+.award-title { font-size:17px; font-weight:500; color:var(--white); margin-bottom:.8rem; }
+.award-desc { font-size:13px; color:rgba(245,243,239,.5); line-height:1.7; }
+.award-icon { position:absolute; right:2rem; top:2rem; font-size:2rem; opacity:.15; }
+
+/* ── RESEARCH ── */
+.research-items { display:flex; flex-direction:column; }
+.r-item {
+  display:grid; grid-template-columns:60px 1fr auto;
+  align-items:center; gap:2rem;
+  padding:1.8rem 0; border-bottom:1px solid var(--border);
+  transition:opacity .2s; cursor:none;
+}
+.research-items:hover .r-item { opacity:.4; }
+.research-items:hover .r-item:hover { opacity:1; }
+.r-num { font-family:var(--serif); font-size:2rem; color:rgba(212,168,83,.2); font-style:italic; }
+.r-title { font-size:16px; font-weight:400; color:var(--white); margin-bottom:.3rem; }
+.r-tag { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.08em; }
+.r-arrow { font-size:1.2rem; color:var(--muted); transition:color .2s,transform .2s; }
+.r-item:hover .r-arrow { color:var(--gold); transform:translate(4px,-4px); }
+
+/* ── CERTS ── */
+.certs-flow { display:flex; flex-wrap:wrap; gap:.8rem; }
+.cert-chip {
+  padding:.6rem 1.4rem; border:1px solid var(--border); font-family:var(--mono);
+  font-size:11px; color:var(--muted); letter-spacing:.05em;
+  transition:border-color .25s,color .25s,background .25s;
+  cursor:none; position:relative; overflow:hidden;
+}
+.cert-chip::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .3s ease; z-index:-1; }
+.cert-chip:hover::before { transform:scaleX(1); }
+.cert-chip:hover { border-color:var(--gold); color:#050508; }
+
+/* ── CONTACT ── */
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; }
+.contact-info { display:flex; flex-direction:column; gap:1px; margin-top:2rem; }
+.c-link {
+  display:flex; align-items:center; gap:1.2rem; padding:1.2rem 1.4rem;
+  background:rgba(255,255,255,.02); border:1px solid var(--border);
+  text-decoration:none; color:var(--muted); font-family:var(--mono); font-size:12px;
+  transition:background .2s,border-color .2s,color .2s; cursor:none;
+}
+.c-link:hover { background:rgba(212,168,83,.05); border-color:rgba(212,168,83,.3); color:var(--white); }
+.c-icon { font-size:16px; width:20px; text-align:center; color:var(--gold); }
+.form-wrap { display:flex; flex-direction:column; gap:1.2rem; }
+.f-field { display:flex; flex-direction:column; gap:.5rem; }
+.f-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.1em; }
+.f-input, .f-textarea {
+  background:rgba(255,255,255,.03); border:1px solid var(--border);
+  color:var(--white); font-family:var(--sans); font-size:14px; font-weight:300;
+  padding:.85rem 1.1rem; outline:none; transition:border-color .2s,background .2s;
+}
+.f-input::placeholder,.f-textarea::placeholder { color:rgba(107,107,122,.5); }
+.f-input:focus,.f-textarea:focus { border-color:rgba(212,168,83,.6); background:rgba(212,168,83,.03); }
+.f-textarea { resize:vertical; min-height:130px; }
+.submit-btn {
+  padding:.9rem 2rem; background:transparent; border:1px solid var(--gold);
+  color:var(--gold); font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+  cursor:none; transition:background .3s,color .3s; position:relative; overflow:hidden;
+}
+.submit-btn::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .3s ease; z-index:-1; }
+.submit-btn:hover::before { transform:scaleX(1); }
+.submit-btn:hover { color:#050508; }
+#form-ok { font-family:var(--mono); font-size:12px; color:var(--teal); display:none; margin-top:.5rem; }
+
+/* ── FOOTER ── */
+footer { border-top:1px solid var(--border); padding:2.5rem 5vw; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; }
+.f-copy { font-family:var(--mono); font-size:11px; color:var(--muted); }
+.f-links { display:flex; gap:2rem; }
+.f-links a { font-family:var(--mono); font-size:11px; color:var(--muted); text-decoration:none; transition:color .2s; }
+.f-links a:hover { color:var(--gold); }
+
+/* ── ANIMATIONS ── */
+@keyframes up { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(40px); transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.reveal-left { opacity:0; transform:translateX(-40px); transition:opacity .7s ease,transform .7s ease; }
+.reveal-left.visible { opacity:1; transform:none; }
+.reveal-right { opacity:0; transform:translateX(40px); transition:opacity .7s ease,transform .7s ease; }
+.reveal-right.visible { opacity:1; transform:none; }
+.delay-1 { transition-delay:.1s; }
+.delay-2 { transition-delay:.2s; }
+.delay-3 { transition-delay:.3s; }
+.delay-4 { transition-delay:.4s; }
+.delay-5 { transition-delay:.5s; }
+
+/* ── SECTION DIVIDERS ── */
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.2; margin:0 5vw; }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  :root{--section-pad:80px 5vw;}
+  .about-layout,.exp-sticky-wrap,.contact-grid{grid-template-columns:1fr;gap:3rem;}
+  .exp-sticky-left{position:static;}
+  .impact-grid{grid-template-columns:repeat(2,1fr);}
+  .impact-item{border-right:none;border-bottom:1px solid var(--border);}
+  .skills-grid,.awards-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:2.5rem;}
+  nav{padding:1.2rem 5vw;}
+  .nav-links{display:none;}
+}
+@media(max-width:560px){
+  .impact-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="progress"></div>
+<canvas id="particles"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-brand" href="#">ST · v2</a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#awards">awards</a></li>
+    <li><a href="#research">research</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">TIWARI</div>
+  <p class="hero-eyebrow">Business Analyst · Product Owner · Pune, India</p>
+  <h1 class="hero-name">Siddharth<br><span class="italic">Tiwari</span></h1>
+  <p class="hero-subtitle">Financial Services · Capital Markets · Asset & Wealth Management</p>
+  <p class="hero-desc">Transforming complex business requirements into elegant financial technology solutions. 3+ years crafting strategy at the intersection of banking, product, and data.</p>
+  <div class="hero-btns">
+    <a href="#contact" class="btn-gold">Let's Connect</a>
+    <a href="#experience" class="btn-outline">View Experience ↓</a>
+  </div>
+  <div class="hero-stats">
+    <div><span class="h-stat-num" data-count="4">0</span><span class="h-stat-label">Years Experience</span></div>
+    <div><span class="h-stat-num" data-count="30">0</span><span class="h-stat-label">Change Requests</span></div>
+    <div><span class="h-stat-num" data-count="100">0</span><span class="h-stat-label">Percent Deliverables</span></div>
+    <div><span class="h-stat-num" data-count="15">0</span><span class="h-stat-label">Agile Sprints</span></div>
+  </div>
+  <div class="hero-scroll"><div class="hero-scroll-line"></div></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="dot">◆</span>Business Requirements</span>
+    <span class="marquee-item"><span class="dot">◆</span>Capital Markets</span>
+    <span class="marquee-item"><span class="dot">◆</span>Agile / Scrum</span>
+    <span class="marquee-item"><span class="dot">◆</span>SQL & Analytics</span>
+    <span class="marquee-item"><span class="dot">◆</span>Asset & wealth Management</span>
+    <span class="marquee-item"><span class="dot">◆</span>JIRA · Confluence</span>
+    <span class="marquee-item"><span class="dot">◆</span>Stakeholder Management</span>
+    <span class="marquee-item"><span class="dot">◆</span>Deferred Compensation</span>
+    <span class="marquee-item"><span class="dot">◆</span>Product Ownership</span>
+    <span class="marquee-item"><span class="dot">◆</span>Tableau · Power BI</span>
+    <span class="marquee-item"><span class="dot">◆</span>Securities Processing</span>
+    <span class="marquee-item"><span class="dot">◆</span>Impact Analysis</span>
+    <span class="marquee-item"><span class="dot">◆</span>Business Requirements</span>
+    <span class="marquee-item"><span class="dot">◆</span>Capital Markets</span>
+    <span class="marquee-item"><span class="dot">◆</span>Agile / Scrum</span>
+    <span class="marquee-item"><span class="dot">◆</span>SQL & Analytics</span>
+    <span class="marquee-item"><span class="dot">◆</span>Asset Management</span>
+    <span class="marquee-item"><span class="dot">◆</span>JIRA · Confluence</span>
+    <span class="marquee-item"><span class="dot">◆</span>Stakeholder Management</span>
+    <span class="marquee-item"><span class="dot">◆</span>Deferred Compensation</span>
+    <span class="marquee-item"><span class="dot">◆</span>Product Ownership</span>
+    <span class="marquee-item"><span class="dot">◆</span>Tableau · Power BI</span>
+    <span class="marquee-item"><span class="dot">◆</span>Securities Processing</span>
+    <span class="marquee-item"><span class="dot">◆</span>Impact Analysis</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-eye reveal">about me</div>
+  <h2 class="s-head reveal delay-1">Where strategy meets<br><em>execution</em></h2>
+  <div class="about-layout">
+    <div class="about-body reveal-left">
+      <p>I'm a <strong>Senior System Engineer at Infosys</strong>, specialising in IT Business Analysis for a leading Global Share Registry & Transfer Agency. My work lives at the intersection of financial domain expertise and agile technology delivery.</p>
+      <p>My superpower is translating <strong>ambiguous business problems</strong> into precise, actionable requirements — then driving those requirements through to delivery without losing an inch of quality. I've owned 30+ change requests, managed 12+ cross-functional team members, and consistently delivered 100% on deadline.</p>
+      <p>I hold an <strong>MBA from Symbiosis SCDL</strong> and a B.E. from SAIT Indore — a blend that gives me both strategic thinking and engineering rigor. I author industry POVs on CBDC, digital asset custody, and GenAI in asset management.</p>
+    </div>
+    <div class="info-stack reveal-right">
+      <div class="info-row"><span class="info-key">CURRENT ROLE</span><span class="info-val">Senior System Engineer (IT Business Analyst)</span></div>
+	  <div class="info-row"><span class="info-key">CURRENT ORGANISATION</span><span class="info-val">Infosys Limited</span></div>
+      <div class="info-row"><span class="info-key">CLIENT</span><span class="info-val">Global Share Registry & Transfer Agency</span></div>
+      <div class="info-row"><span class="info-key">UNIT</span><span class="info-val">Financial Services Domanin Consulting Group</span></div>
+	  <div class="info-row"><span class="info-key">DOMAIN</span><span class="info-val">Captial Market . Asset and Wealth Management</span></div>
+      <div class="info-row"><span class="info-key">EDUCATION</span><span class="info-val">MBA (SCDL) · B.E. (SAIT)</span></div>
+      <div class="info-row"><span class="info-key">LOCATION</span><span class="info-val">Pune, MH · Open to Remote</span></div>
+      <div class="info-row"><span class="info-key">EMAIL</span><span class="info-val">siddharthtiwari4272@gmail.com</span></div>
+      <div class="info-row"><span class="info-key">PHONE</span><span class="info-val">+91 8770983266</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT NUMBERS -->
+<div class="impact-section">
+  <div class="impact-grid">
+    <div class="impact-item reveal delay-1">
+      <span class="impact-num"><span class="accent" data-count="30">0</span>+</span>
+      <span class="impact-label">Change Requests<br>Managed</span>
+    </div>
+    <div class="impact-item reveal delay-2">
+      <span class="impact-num"><span class="accent" data-count="20">0</span>+</span>
+      <span class="impact-label">UAT Defects<br>Reduced (%)</span>
+    </div>
+    <div class="impact-item reveal delay-3">
+      <span class="impact-num"><span class="accent" data-count="40">0</span>%</span>
+      <span class="impact-label">Faster<br>Onboarding</span>
+    </div>
+    <div class="impact-item reveal delay-4">
+      <span class="impact-num"><span class="accent" data-count="100">0</span>%</span>
+      <span class="impact-label">On-Time<br>Delivery Rate</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="exp-sticky-wrap">
+    <div class="exp-sticky-left">
+      <div class="s-eye reveal">experience</div>
+      <h2 class="s-head reveal delay-1">3+ years of<br><em>impactful</em><br>delivery</h2>
+      <p class="reveal delay-2" style="font-size:14px;color:rgba(245,243,239,.5);line-height:1.8;max-width:360px;">From gathering business requirements to managing cross-functional teams across 15+ Agile sprints — consistently delivering enterprise-grade financial technology solutions.</p>
+    </div>
+    <div class="exp-items">
+      <div class="exp-card">
+        <div class="exp-card-period">2022 — PRESENT · INFOSYS</div>
+        <div class="exp-card-role">Senior System Engineer — IT Business Analyst</div>
+        <div class="exp-card-company">Client: Global Share Registry & Transfer Agency</div>
+        <ul class="exp-card-points">
+          <li>Elicited and documented BRS, FRD, NFRD for a deferred compensation platform serving enterprise asset management clients.</li>
+          <li>Managed two cross-functional teams of 6+ members each, reducing miscommunication by 30% through structured delivery frameworks.</li>
+          <li>Conducted impact analysis for 30+ change requests, decomposing into 20+ Jira user stories with bi-weekly grooming — reducing rework by 25%.</li>
+          <li>Used SQL for data analysis & troubleshooting, resolving 90%+ of queries pre-implementation, cutting UAT defects by 20%.</li>
+          <li>Managed INVARIS platform for financial statement templates and client reporting across 500+ investment account holders.</li>
+          <li>Delivered 100% of requirements on deadline across 15+ Agile sprints, accelerating project completion by 20%.</li>
+          <li>Maintained Confluence documentation reducing team onboarding time by 40%.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-eye reveal">skills & expertise</div>
+  <h2 class="s-head reveal delay-1">A toolkit built for<br><em>financial tech</em></h2>
+  <div class="skills-grid">
+    <div class="skill-3d-wrap reveal delay-1">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">🏦</div>
+        <div class="sk-name">Financial Domain</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">Capital Markets</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="90"></div></div><span class="sk-bar-pct">90%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Asset Mgmt</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="88"></div></div><span class="sk-bar-pct">88%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Deferred Comp</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="95"></div></div><span class="sk-bar-pct">95%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Securities</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="85"></div></div><span class="sk-bar-pct">85%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="skill-3d-wrap reveal delay-2">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">📋</div>
+        <div class="sk-name">Business Analysis</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">Requirements</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="95"></div></div><span class="sk-bar-pct">95%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">BRD / FRD</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="92"></div></div><span class="sk-bar-pct">92%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Impact Analysis</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="90"></div></div><span class="sk-bar-pct">90%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Stakeholder Mgmt</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="88"></div></div><span class="sk-bar-pct">88%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="skill-3d-wrap reveal delay-3">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">⚡</div>
+        <div class="sk-name">Agile & Delivery</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">Scrum / JIRA</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="93"></div></div><span class="sk-bar-pct">93%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Sprint Planning</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="90"></div></div><span class="sk-bar-pct">90%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Product Ownership</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="85"></div></div><span class="sk-bar-pct">85%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Confluence</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="92"></div></div><span class="sk-bar-pct">92%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="skill-3d-wrap reveal delay-1">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">📊</div>
+        <div class="sk-name">Data & Analytics</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">SQL</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="88"></div></div><span class="sk-bar-pct">88%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Tableau</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="80"></div></div><span class="sk-bar-pct">80%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Power BI</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="75"></div></div><span class="sk-bar-pct">75%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Data Analysis</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="85"></div></div><span class="sk-bar-pct">85%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="skill-3d-wrap reveal delay-2">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">🤝</div>
+        <div class="sk-name">Leadership</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">Team Management</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="90"></div></div><span class="sk-bar-pct">90%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Client Interaction</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="92"></div></div><span class="sk-bar-pct">92%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Communication</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="95"></div></div><span class="sk-bar-pct">95%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Problem-Solving</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="93"></div></div><span class="sk-bar-pct">93%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="skill-3d-wrap reveal delay-3">
+      <div class="skill-3d-card" data-tilt>
+        <div class="sk-icon">🔧</div>
+        <div class="sk-name">Platforms & Tools</div>
+        <div class="sk-bar-wrap">
+          <div class="sk-bar-row"><span class="sk-bar-label">INVARIS</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="88"></div></div><span class="sk-bar-pct">88%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">JIRA</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="93"></div></div><span class="sk-bar-pct">93%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">Confluence</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="90"></div></div><span class="sk-bar-pct">90%</span></div>
+          <div class="sk-bar-row"><span class="sk-bar-label">MS Office</span><div class="sk-bar-track"><div class="sk-bar-fill" data-w="95"></div></div><span class="sk-bar-pct">95%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section>
+  <div class="s-eye reveal">certifications</div>
+  <h2 class="s-head reveal delay-1">Certified across<br><em>domains</em></h2>
+  <div class="certs-flow reveal delay-2">
+    <span class="cert-chip">Six Sigma White Belt</span>
+    <span class="cert-chip">Securities Associate</span>
+    <span class="cert-chip">Product Owner</span>
+    <span class="cert-chip">Fixed Income Securities Associate</span>
+    <span class="cert-chip">Banking Level 2 Associate</span>
+    <span class="cert-chip">SQL Basic & Intermediate</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="s-eye reveal">recognition</div>
+  <h2 class="s-head reveal delay-1">Awards that speak<br><em>louder</em> than words</h2>
+  <div class="awards-grid">
+    <div class="award-card reveal delay-1">
+      <div class="award-icon">🏆</div>
+      <div class="award-year">SEPTEMBER 2025</div>
+      <div class="award-org">Infosys</div>
+      <div class="award-title">RISE Award Q2 — Rookie of the Quarter</div>
+      <div class="award-desc">Recognised individually across the entire team for outstanding contributions and measurable project impact. Selected as the standout individual contributor of the quarter.</div>
+    </div>
+    <div class="award-card reveal delay-2">
+      <div class="award-icon">⭐</div>
+      <div class="award-year">JUNE 2025</div>
+      <div class="award-org">Computershare</div>
+      <div class="award-title">Certificate of Excellence</div>
+      <div class="award-desc">Direct client recognition from Computershare for exceptional contributions to project success — a rare honour bestowed by the client organisation itself, not internal Infosys management.</div>
+    </div>
+    <div class="award-card reveal delay-3">
+      <div class="award-icon">⚡</div>
+      <div class="award-year">JULY 2024</div>
+      <div class="award-org">Infosys</div>
+      <div class="award-title">Insta RISE Award</div>
+      <div class="award-desc">Awarded for outstanding contributions in developing POVs, RFPs, and timely deliverables — enhancing business efficiency and delivering measurable strategic impact.</div>
+    </div>
+    <div class="award-card reveal delay-4">
+      <div class="award-icon">🎓</div>
+      <div class="award-year">2016 — 2020</div>
+      <div class="award-org">SAIT Indore</div>
+      <div class="award-title">Dean's List — Academic Excellence</div>
+      <div class="award-desc">Recognised on the Dean's List for exceptional academic performance. Served as Student Executive Board member and organised leadership workshops for peers.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="s-eye reveal">thought leadership</div>
+  <h2 class="s-head reveal delay-1">Industry research &<br><em>POVs</em></h2>
+  <div class="research-items">
+    <div class="r-item reveal delay-1">
+      <div class="r-num">01</div>
+      <div><div class="r-title">POV on Central Bank Digital Currency (CBDC)</div><div class="r-tag">REGULATORY IMPACT · FINANCIAL MARKETS</div></div>
+      <div class="r-arrow">↗</div>
+    </div>
+    <div class="r-item reveal delay-2">
+      <div class="r-num">02</div>
+      <div><div class="r-title">POV on Digital Asset Custody</div><div class="r-tag">SECURITY FRAMEWORKS · COMPLIANCE</div></div>
+      <div class="r-arrow">↗</div>
+    </div>
+    <div class="r-item reveal delay-3">
+      <div class="r-num">03</div>
+      <div><div class="r-title">GenAI in Asset Management — Whitepaper</div><div class="r-tag">ARTIFICIAL INTELLIGENCE · INVESTMENT STRATEGY</div></div>
+      <div class="r-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="s-eye reveal">contact</div>
+  <div class="contact-grid">
+    <div>
+      <h2 class="s-head reveal delay-1">Open to<br><em>great</em><br>opportunities</h2>
+      <p class="reveal delay-2" style="font-size:14px;color:rgba(245,243,239,.5);line-height:1.8;margin-bottom:2rem;">Targeting Business Analyst, Product Owner, Project Manager & Program Manager roles at banks, IT firms, and consultancies in Pune or remote.</p>
+      <div class="contact-info reveal delay-3">
+        <a href="mailto:siddharthtiwari4272@gmail.com" class="c-link"><span class="c-icon">✉</span>siddharthtiwari4272@gmail.com</a>
+        <a href="tel:+918770983266" class="c-link"><span class="c-icon">☏</span>+91 8770983266</a>
+        <a href="https://www.linkedin.com/in/siddharthtiwari" target="_blank" class="c-link"><span class="c-icon">in</span>linkedin.com/in/siddharthtiwari ↗</a>
+        <a href="https://public.tableau.com" target="_blank" class="c-link"><span class="c-icon">◈</span>Tableau Public Portfolio ↗</a>
+      </div>
+    </div>
+    <div class="reveal delay-2">
+      <div class="form-wrap">
+        <div class="f-field"><label class="f-label">YOUR NAME</label><input type="text" class="f-input" placeholder="Jane Smith" id="fn"/></div>
+        <div class="f-field"><label class="f-label">EMAIL ADDRESS</label><input type="email" class="f-input" placeholder="jane@company.com" id="fe"/></div>
+        <div class="f-field"><label class="f-label">SUBJECT</label><input type="text" class="f-input" placeholder="Business Analyst opportunity at…" id="fs"/></div>
+        <div class="f-field"><label class="f-label">MESSAGE</label><textarea class="f-textarea" placeholder="Tell me about the role or project…" id="fm"></textarea></div>
+        <button class="submit-btn" onclick="submitForm(this)">Send Message →</button>
+        <p id="form-ok">✓ Message received. I'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="f-copy">© 2025 Siddharth Tiwari · Pune, India</span>
+  <div class="f-links">
+    <a href="mailto:siddharthtiwari4272@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/siddharthtiwari" target="_blank">LinkedIn</a>
+    <a href="#hero">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.r-item,.award-card,.skill-3d-card,.info-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+
+/* ── PARTICLES ── */
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize',resize);
+class Particle{
+  constructor(){
+    this.x=Math.random()*W; this.y=Math.random()*H;
+    this.vx=(Math.random()-.5)*.3; this.vy=(Math.random()-.5)*.3;
+    this.r=Math.random()*1.5+.5;
+    this.alpha=Math.random()*.5+.1;
+    this.color=Math.random()>.7?'212,168,83':'78,205,196';
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W)this.vx*=-1; if(this.y<0||this.y>H)this.vy*=-1; }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(${this.color},${this.alpha})`; ctx.fill(); }
+}
+for(let i=0;i<80;i++) particles.push(new Particle());
+function drawLines(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){ ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.strokeStyle=`rgba(212,168,83,${.12*(1-dist/120)})`; ctx.lineWidth=.5; ctx.stroke(); }
+    }
+  }
+}
+function animParticles(){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{p.update();p.draw();}); drawLines(); requestAnimationFrame(animParticles); }
+animParticles();
+
+/* ── SCROLL PROGRESS + NAV ── */
+const nav=document.getElementById('nav');
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width=pct+'%';
+  nav.classList.toggle('scrolled',window.scrollY>60);
+  // nav active
+  const sections=document.querySelectorAll('section[id]');
+  let curr='';
+  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-140) curr=s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+curr);
+  });
+});
+
+/* ── INTERSECTION OBSERVER ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // animate count-up if has data-count
+      e.target.querySelectorAll('[data-count]').forEach(el=>countUp(el));
+      // animate skill bars
+      e.target.querySelectorAll('.sk-bar-fill[data-w]').forEach(bar=>{
+        bar.style.width=bar.dataset.w+'%';
+      });
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.exp-card,.impact-item,.award-card,.r-item,.skill-3d-wrap').forEach(el=>io.observe(el));
+
+// also trigger bars that are already in viewport on load
+setTimeout(()=>{
+  document.querySelectorAll('.sk-bar-fill[data-w]').forEach(bar=>{
+    const rect=bar.getBoundingClientRect();
+    if(rect.top<window.innerHeight) bar.style.width=bar.dataset.w+'%';
+  });
+},600);
+
+/* ── HERO COUNT UP ── */
+function countUp(el){
+  const target=+el.dataset.count;
+  let start=0; const dur=1800;
+  const step=timestamp=>{
+    if(!start) start=timestamp;
+    const prog=Math.min((timestamp-start)/dur,1);
+    const ease=1-Math.pow(1-prog,3);
+    el.textContent=Math.round(ease*target);
+    if(prog<1) requestAnimationFrame(step);
+    else el.textContent=target;
+  };
+  requestAnimationFrame(step);
+}
+// trigger hero counts after load
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.hero-stats [data-count]').forEach(countUp);
+    document.querySelectorAll('.impact-num [data-count]').forEach(el=>{
+      const rect=el.getBoundingClientRect();
+      if(rect.top<window.innerHeight) countUp(el);
+    });
+  },1000);
+});
+
+/* ── 3D TILT ── */
+document.querySelectorAll('[data-tilt]').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(600px) rotateY(${x*10}deg) rotateX(${-y*10}deg) scale(1.02)`;
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+  card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
+});
+
+/* ── FORM ── */
+function submitForm(btn){
+  const n=document.getElementById('fn').value.trim();
+  const e=document.getElementById('fe').value.trim();
+  const s=document.getElementById('fs').value.trim();
+  const m=document.getElementById('fm').value.trim();
+  if(!n||!e||!m){ btn.style.borderColor='#f0c97a'; btn.textContent='Fill all fields →'; setTimeout(()=>{btn.style.borderColor='';btn.textContent='Send Message →';},2200); return; }
+  btn.textContent='Sending…'; btn.disabled=true;
+  setTimeout(()=>{
+    btn.style.display='none';
+    document.getElementById('form-ok').style.display='block';
+    ['fn','fe','fs','fm'].forEach(id=>document.getElementById(id).value='');
+  },1400);
+}
+
+/* ── SMOOTH ANCHOR ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+</script>
+</body>
+</html>
